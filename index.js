@@ -66,7 +66,6 @@ exports.server = function server(bigpipe, options) {
   bigpipe._compiler.on('register', function register(file, next) {
     if (!file.location) return next();
 
-    delete this.buffer[file.location];
     this.buffer[join(file.location)] = file;
 
     next();
