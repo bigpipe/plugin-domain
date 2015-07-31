@@ -1,6 +1,6 @@
 {
   "name": "bigpipe-domain",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Scope the resources from the compiler to a domain",
   "main": "index.js",
   "scripts": {
