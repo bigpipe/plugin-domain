@@ -28,7 +28,8 @@
   },
   "homepage": "https://github.com/bigpipe/plugin-domain",
   "dependencies": {
-    "diagnostics": "~1.0.1"
+    "diagnostics": "~1.0.1",
+    "lodash.merge": "~3.3.2"
   },
   "devDependencies": {
     "assume": "~1.2.5",

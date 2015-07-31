@@ -23,7 +23,12 @@ describe('BigPipe - Plugin domain', function () {
   describe('server side plugin', function () {
     beforeEach(function () {
       options = function get() {
-        return {};
+        return {
+          hostname: 'localhost',
+          protocol: 'http',
+          pathname: '/',
+          port: 8080
+        };
       };
       file = new File;
       bigpipe = new BigPipe;
