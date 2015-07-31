@@ -36,6 +36,6 @@
     "bigpipe": "~0.9.9",
     "istanbul": "~0.3.0",
     "mocha": "~2.2.0",
-    "pre-commit": "~1.0.0"
+    "pre-commit": "~1.1.1"
   }
 }
