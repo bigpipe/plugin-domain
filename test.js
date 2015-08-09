@@ -44,5 +44,20 @@ describe('BigPipe - Plugin domain', function () {
       assume(bigpipe._compiler._events).to.have.property('register');
       bigpipe._compiler.emit('register', file, done);
     });
+
+    it('supports full server configurations and pathname only', function (done) {
+      var location = file.location;
+
+      options = function get() {
+        return '/test';
+      };
+
+      domain.server(bigpipe, options);
+      bigpipe._compiler.emit('register', file, function () {
+        assume(bigpipe._compiler.buffer).to.have.property('/test'+ location);
+        assume(bigpipe._compiler.buffer['/test'+ location]).to.equal(file);
+        done();
+      });
+    });
   });
 });

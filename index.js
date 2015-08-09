@@ -17,12 +17,8 @@ exports.name = 'domain';
 exports.server = function server(bigpipe, options) {
   var registerProxy = bigpipe._compiler.register
     , pageletProxy = bigpipe._compiler.pagelet
-    , domain = options('domain', {
-        hostname: 'localhost',
-        protocol: 'http',
-        pathname: '/',
-        port: 8080
-      });
+    , domain = options('domain', '/')
+    , mode = typeof domain;
 
   /**
    * Join the filename with the provided pathname.
@@ -32,7 +28,7 @@ exports.server = function server(bigpipe, options) {
    * @api private
    */
   function join(file) {
-    return path.join(domain.pathname, file);
+    return path.join('object' === mode ? domain.pathname : domain, file);
   }
 
   /**
@@ -43,21 +39,21 @@ exports.server = function server(bigpipe, options) {
    * @api private
    */
   function prepend(file) {
-    var url = merge({}, domain);
+    var url;
 
-    url.pathname = join(file);
-    return format(url);
+    switch (mode) {
+      case 'object':
+        url = merge({}, domain);
+        url.pathname = join(file);
+        url = format(url);
+        break;
+      default:
+        url = join(file);
+        break;
+    }
+
+    return url;
   }
-
-  //
-  // Extract address and port form the running server.
-  //
-  bigpipe.once('listening', function update() {
-    var server = bigpipe._server.address();
-
-    domain.hostname = server.address;
-    domain.port = server.port;
-  });
 
   //
   // Remove the buffer reference that was registered and update
@@ -66,6 +62,7 @@ exports.server = function server(bigpipe, options) {
   bigpipe._compiler.on('register', function register(file, next) {
     if (!file.location) return next();
 
+    debug('Registering alias %s in buffer', join(file.location));
     this.buffer[join(file.location)] = file;
 
     next();
@@ -77,6 +74,7 @@ exports.server = function server(bigpipe, options) {
   bigpipe._compiler.pagelet = function pagelet() {
     var assets = pageletProxy.apply(bigpipe._compiler, arguments);
 
+    debug('Adding %d JS and %d CSS assets', assets.js.length, assets.css.length);
     assets.js = assets.js.map(prepend);
     assets.css = assets.css.map(prepend);
 
