@@ -37,8 +37,20 @@ BigPipe.createServer(1337, {
 });
 ```
 
-**Note:** the `port` and `hostname` are extracted from the running bigpipe server
-and do not have to be explicitly configured.
+Scoping the resources to just a prepended pathname is possible as well. Simply
+provide the domain as `string`. The example below will scope
+`1fb1d9e0d989a5673eb0d69c904b804b3a38f483.js` as
+`/path/to/sub/1fb1d9e0d989a5673eb0d69c904b804b3a38f483.js`.
+
+```js
+var domain = require('bigpipe-domain')
+  , BigPipe = require('bigpipe');
+
+BigPipe.createServer(1337, {
+  plugins: [ domain ],
+  domain: '/path/to/sub'
+});
+```
 
 ### License
 
