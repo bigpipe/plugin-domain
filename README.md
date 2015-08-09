@@ -32,7 +32,8 @@ BigPipe.createServer(1337, {
   domain: {
     pathname: '/path/to/sub',
     hostname: 'subdomain.bigpipe.com',
-    protocol: 'https'
+    protocol: 'https',
+    port: 1337
   }
 });
 ```
