@@ -59,15 +59,17 @@ exports.server = function server(bigpipe, options) {
   // Remove the buffer reference that was registered and update
   // it with the updated file path based on the url.
   //
-  bigpipe._compiler.on('register', function register(file, origin, next) {
-    var location = origin ? file.origin : file.location;
+  bigpipe._compiler.on('register', function register(file, next) {
+    var location = file.location
+      , origin = file.origin;
 
-    if (!location) {
+    if (!location || file.external) {
       return next();
     }
 
     debug('Registering alias %s in buffer', join(location));
     this.buffer[join(location)] = file;
+    if (origin) this.buffer[join(origin)] = file;
 
     next();
   });
