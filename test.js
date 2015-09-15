@@ -32,7 +32,7 @@ describe('BigPipe - Plugin domain', function () {
         };
       };
 
-      file = new File('');
+      file = new File;
       bigpipe = new BigPipe;
     });
 
