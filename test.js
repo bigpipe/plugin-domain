@@ -44,7 +44,7 @@ describe('BigPipe - Plugin domain', function () {
       domain.server(bigpipe, options);
 
       assume(bigpipe._compiler._events).to.have.property('register');
-      bigpipe._compiler.emit('register', file, done);
+      bigpipe._compiler.emit('register', file, false, done);
     });
 
     it('supports pathname configurations', function (done) {
@@ -55,7 +55,7 @@ describe('BigPipe - Plugin domain', function () {
       };
 
       domain.server(bigpipe, options);
-      bigpipe._compiler.emit('register', file, function () {
+      bigpipe._compiler.emit('register', file, false, function () {
         assume(bigpipe._compiler.buffer).to.have.property('/test'+ location);
         assume(bigpipe._compiler.buffer['/test'+ location]).to.equal(file);
         done();
