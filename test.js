@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter
   , File = require('bigpipe/lib/file')
   , BigPipe = require('bigpipe')
   , assume = require('assume')
+  , http = require('http')
   , domain = require('./')
   , bigpipe, file, options;
 
@@ -26,10 +27,11 @@ describe('BigPipe - Plugin domain', function () {
         return {
           hostname: 'localhost',
           protocol: 'http',
-          pathname: '/',
+          pathname: '/test',
           port: 8080
         };
       };
+
       file = new File;
       bigpipe = new BigPipe;
     });
@@ -45,7 +47,7 @@ describe('BigPipe - Plugin domain', function () {
       bigpipe._compiler.emit('register', file, done);
     });
 
-    it('supports full server configurations and pathname only', function (done) {
+    it('supports pathname configurations', function (done) {
       var location = file.location;
 
       options = function get() {
@@ -57,6 +59,25 @@ describe('BigPipe - Plugin domain', function () {
         assume(bigpipe._compiler.buffer).to.have.property('/test'+ location);
         assume(bigpipe._compiler.buffer['/test'+ location]).to.equal(file);
         done();
+      });
+    });
+
+    it('exposes the compiled core library under the same domain', function (done) {
+      this.timeout(3E4);
+
+      bigpipe = BigPipe.createServer({
+        plugins: [ domain ],
+        domain: options(),
+        listen: false
+      });
+
+      bigpipe.listen(8080, function () {
+        assume(bigpipe._compiler.buffer).to.have.property('/test/bigpipe.js');
+
+        http.get('http://localhost:8080/test/bigpipe.js', function(res) {
+          assume(res.statusCode).to.equal(200);
+          done();
+        }).on('error', done);
       });
     });
   });

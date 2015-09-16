@@ -60,10 +60,16 @@ exports.server = function server(bigpipe, options) {
   // it with the updated file path based on the url.
   //
   bigpipe._compiler.on('register', function register(file, next) {
-    if (!file.location) return next();
+    var location = file.location
+      , origin = file.origin;
 
-    debug('Registering alias %s in buffer', join(file.location));
-    this.buffer[join(file.location)] = file;
+    if (!location || file.external) {
+      return next();
+    }
+
+    debug('Registering alias %s in buffer', join(location));
+    this.buffer[join(location)] = file;
+    if (origin) this.buffer[join(origin)] = file;
 
     next();
   });
