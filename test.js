@@ -63,6 +63,8 @@ describe('BigPipe - Plugin domain', function () {
     });
 
     it('exposes the compiled core library under the same domain', function (done) {
+      this.timeout(3E4);
+
       bigpipe = BigPipe.createServer({
         plugins: [ domain ],
         domain: options(),
